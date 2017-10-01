@@ -6,10 +6,13 @@ import FireHose from '../src/server/fireHose.js'
 const express = require("express");
 const path = require ("path");
 const open = require("open");
+const sse = require('../src/middleware/sse');
 
 // Express setup
 const port = 3000;
 const app = express();
+app.use(sse);
+
 
 // App logic setup
 const repository = new Repository();
@@ -24,9 +27,15 @@ app.get('/', function(req, res){
     res.sendFile(path.join(__dirname, '../src/index.html'));
 });
 
+app.get('/sessionId', function(req, res){
+    res.send( req.sessionId);
+})
+
 // Establish a stream connection 
 app.get('/connection', function(req, res){
-    
+    let sid = req.sessionId;
+    res.sseSetup();
+    repository.addConnection(res, sid);
 });
 
 // Get the list of queries this session is watching

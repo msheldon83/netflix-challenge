@@ -7,14 +7,17 @@
     "url": "https://github.com/msheldon83/netflix-challenge"
   },
   "scripts": {
-    "start": "npm-run-all --parallel open:src lint:watch",
+    "start": "npm-run-all --parallel open:src lint:watch test:watch",
     "open:src": "babel-node buildScripts/srcServer.js",
     "lint": "esw webpack.config.* src buildScripts",
-    "lint:watch": "npm run lint -- --watch"
+    "lint:watch": "npm run lint -- --watch",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch"
   },
   "author": "Mike Sheldon",
   "license": "MIT",
   "dependencies": {
+    "uuid": "^3.1.0",
     "whatwg-fetch": "1.0.0"
   },
   "devDependencies": {
@@ -34,6 +37,7 @@
     "jest": "^21.2.1",
     "npm-run-all": "3.1.1",
     "nsp": "2.6.2",
+    "open": "0.0.5",
     "style-loader": "0.13.1",
     "webpack": "1.13.2",
     "webpack-dev-middleware": "1.8.4",

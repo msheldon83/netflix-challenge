@@ -4,7 +4,7 @@ class FireHose {
     }
     
     start(){
-        
+
     }
 
     stop (){
