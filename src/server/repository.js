@@ -100,9 +100,7 @@ class Repository{
         return id;
     }
 
-    removeQuery(query, sid){ //returns query object
-        let id = findQueryId(query, this.querySignatures);
-        if(!id) return;
+    removeQueryById(id, sid) {
 
         let q = this.queries[id];
 
@@ -113,6 +111,13 @@ class Repository{
             removeQueryfromQueries( q, this.queries );
         }
         return q;
+    }
+
+    removeQuery(query, sid){ //returns query object
+        let id = findQueryId(query, this.querySignatures);
+        if(!id) return;
+
+        return this.removeQueryById(id, sid);
     }
 
     getAllQueries(){ // returns array of query objects

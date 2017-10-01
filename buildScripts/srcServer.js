@@ -4,6 +4,7 @@ import Resolver from '../src/server/resolver.js'
 import FireHose from '../src/server/fireHose.js'
 
 const express = require("express");
+const bodyParser = require("body-parser");
 const path = require ("path");
 const open = require("open");
 const sse = require('../src/middleware/sse');
@@ -12,12 +13,13 @@ const sse = require('../src/middleware/sse');
 const port = 3000;
 const app = express();
 app.use(sse);
+app.use(bodyParser.json());
 
 
 // App logic setup
-const repository = new Repository();
-const fireHose = new FireHose(new Resolver(repository));
-const appLogic = new App(repository, fireHose);
+const appLogic = new App(
+    new Repository(), 
+    new FireHose(new Resolver(repository)));
 
 
 // ROUTES
@@ -28,29 +30,29 @@ app.get('/', function(req, res){
 });
 
 app.get('/sessionId', function(req, res){
-    res.send( req.sessionId);
+    console.log(req.sessionID);
+    res.send(req.sessionID);
 })
 
 // Establish a stream connection 
-app.get('/connection', function(req, res){
-    let sid = req.sessionId;
+app.get('/connections/:sid', function(req, res){
     res.sseSetup();
-    repository.addConnection(res, sid);
+    appLogic.addConnection(res, req.params.sid);
 });
 
 // Get the list of queries this session is watching
-app.get('/connection/queries', function(req, res){
-    
+app.get('/connections/:sid/queries', function(req, res){
+    res.send(appLogic.getQueries(req.params.sid));
 });
 
 // Post a new query
-app.post('/connection/queries', function(req, res){
-    
+app.post('/connections/:sid/queries', function(req, res){
+    res.send(appLogic.addQuery(req.body, req.params.sid));
 });
 
 // Delete a query
-app.delete('/connection/queries', function(req, res){
-    
+app.delete('/connections/:sid/queries/:qid', function(req, res){
+    res.send(appLogic.removeQueryById(req.params.qid, req.params.sid));
 });
 
 
