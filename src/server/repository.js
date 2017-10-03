@@ -19,11 +19,14 @@ function addQuerySignature(q, signatures){
 }
 
 function addQueryToSessions(q, sid, sessions){
-    sessions[sid] = [ ... (sessions[sid] || []), q.id ];
+
+    sessions[sid] = sessions[sid] || new Set();
+    sessions[sid].add(q.id);
 }
 
 function addQueryToSessionQueries(q, sid, sessionQueries){
-    sessionQueries[q.id] = [ ... (sessionQueries[q.id] || []), sid];
+    sessionQueries[q.id] = sessionQueries[q.id] || new Set();
+    sessionQueries[q.id].add(sid);
 }
 
 function removeQueryfromQueries(q, queries){
@@ -31,12 +34,14 @@ function removeQueryfromQueries(q, queries){
 }
 
 function removeQueryFromSessions(q, sid, sessions){
-    sessions[sid] = sessions[sid].filter(x => x != q.id);
+    sessions[sid] = sessions[sid] || new Set();
+    sessions[sid].delete(q.id);
 }
 
 function removeQueryFromSessionQueries(q, sid, sessionQueries){
-    sessionQueries[q.id] = sessionQueries[q.id].filter( s => s != sid);
-    if(sessionQueries[q.id].length === 0)
+    sessionQueries[q.id] = sessionQueries[q.id] || new Set();
+    sessionQueries[q.id].delete(sid); 
+    if(sessionQueries[q.id].size === 0)
         delete sessionQueries[q.id];
 
     return sessionQueries[q.id];
@@ -55,11 +60,6 @@ function findQueryId(query, signatures){
 function querySignature(query){
     let queryWithoutId = removeId(query);
     return JSON.stringify(queryWithoutId);
-}
-
-function newConnection(){
-    // TODO real SSE
-    return uuidv4();
 }
 
 // Note: I chose to make the data representation to be more complex 
@@ -125,11 +125,22 @@ class Repository{
     }
 
     getQueries(sid){ // returns array of query objects
-        return this.sessions[sid].map( id => this.queries[id]);
+        let set = this.sessions[sid];
+
+        if (set){
+            let values = [... set.values()];
+            return values.map( id => this.queries[id]);
+        }
+        
+        return [];
     }
 
     getSids(queryId){ // returns array of strings
-        return this.sessionQueries[queryId] || [];
+        let set = this.sessionQueries[queryId];
+        if(set) 
+            return [... set.values() ] 
+
+        return [];
     }
 
 

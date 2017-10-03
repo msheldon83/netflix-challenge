@@ -1,6 +1,6 @@
 import App from '../src/server/app.js'
 import Repository from '../src/server/repository.js'
-import Resolver from '../src/server/resolver.js'
+import { Resolver } from '../src/server/resolver.js'
 import FireHose from '../src/server/fireHose.js'
 
 const express = require("express");
@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const path = require ("path");
 const open = require("open");
 const sse = require('../src/middleware/sse');
+
 
 // Express setup
 const port = 3000;
@@ -17,26 +18,26 @@ app.use(bodyParser.json());
 
 
 // App logic setup
+const netflixUrl = 'https://tweet-service.herokuapp.com/stream'
+//const testUrl = "http://localhost:3000/test"
+const repository = new Repository();
 const appLogic = new App(
-    new Repository(), 
-    new FireHose(new Resolver(repository)));
+    repository, 
+    new FireHose(new Resolver(repository), netflixUrl));
 
 
 // ROUTES
+
 
 // Index.html
 app.get('/', function(req, res){
     res.sendFile(path.join(__dirname, '../src/index.html'));
 });
 
-app.get('/sessionId', function(req, res){
-    console.log(req.sessionID);
-    res.send(req.sessionID);
-})
-
 // Establish a stream connection 
 app.get('/connections/:sid', function(req, res){
     res.sseSetup();
+    res.sseSend("hello");
     appLogic.addConnection(res, req.params.sid);
 });
 
@@ -53,6 +54,12 @@ app.post('/connections/:sid/queries', function(req, res){
 // Delete a query
 app.delete('/connections/:sid/queries/:qid', function(req, res){
     res.send(appLogic.removeQueryById(req.params.qid, req.params.sid));
+});
+
+// A test SSE stream
+app.get('/teststream', function(req, res){
+    res.sseSetup();
+    setInterval( function(){ res.sseSend({ "tweet" : "Ho" })}, 500 );
 });
 
 

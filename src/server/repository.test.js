@@ -24,6 +24,21 @@ test('added query returned in getQueries', () => {
     expect(foundQuery).toMatchObject(query);
 });
 
+test('added query is idempotent', () => {
+    let sut = new Repository();
+    let query = { field: "message", operator: "equals", value: "hello" };
+    let sid = '123';
+
+    let queryId = sut.addQuery(query, sid);
+    let queryId2 = sut.addQuery(query, sid);
+    let foundQuery = sut.getQueries(sid).filter( q => q.id === queryId);
+    let foundSids = sut.getSids(queryId)
+
+    expect(queryId).toEqual(queryId2);
+    expect(foundQuery.length).toEqual(1);
+    expect(foundSids.length).toEqual(1);
+});
+
 test('added query added to multiple sids returns all sids', () => {
     let sut = new Repository();
     let query = { field: "message", operator: "equals", value: "hello" };
@@ -63,6 +78,7 @@ test('removed query not returned in getQueries', () => {
     let foundQuery = (sut.getQueries(sid) || []).find( q => q.id === queryId);
 
     expect(foundQuery).toBeUndefined();
+    expect(removedQuery).toMatchObject(query);
 });
 
 test('removed query does not include sid in list', () => {
@@ -72,12 +88,13 @@ test('removed query does not include sid in list', () => {
     let sid2 = '345';
 
     let queryId = sut.addQuery(query, sid);
-    let queryId2 = sut.addQuery(query, sid2);
+    let queryId2 = sut.addQuery(query, sid2);   // eslint-disable-line no-unusedvars
     let removedQuery = sut.removeQuery(query, sid);
     let resultSids = sut.getSids(queryId);
     let found = resultSids.find(x => x == sid );
 
     expect(found).toBeUndefined();
+    expect(removedQuery).toMatchObject(query);
 });
 
 test('addConnection creates can be retrieved', () => {
@@ -102,5 +119,25 @@ test('removeConnection returns existing connection if there is one', () => {
     let retrievedConnection = sut.getConnection(sid);
     expect(conn).toEqual(removedConn);
     expect(retrievedConnection).toBeUndefined();
+
+});
+
+test('getQueries for non existant sid returns empty array', () => {
+    let sut = new Repository();
+    let sid = '123';
+
+    let result = sut.getQueries(sid);
+    expect(Array.isArray(result)).toBeTruthy();
+    expect(result.length).toEqual(0);
+
+});
+
+test('getSids for non existant qid returns empty array', () => {
+    let sut = new Repository();
+    let qid = '123';
+
+    let result = sut.getSids(qid);
+    expect(Array.isArray(result)).toBeTruthy();
+    expect(result.length).toEqual(0);
 
 });
