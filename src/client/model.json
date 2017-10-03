@@ -1,0 +1,20 @@
+{
+    "cards" : [
+        {
+            "name": "string",
+            "query" : {
+                "id": "string",
+                "conditions" : [
+                    {
+                        "field": "string",
+                        "operator": "string",
+                        "value": "string"
+                    }
+                ]
+            },
+            "tweets": [],
+            "started": true
+
+        }
+    ]
+}

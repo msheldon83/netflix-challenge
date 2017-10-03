@@ -9,7 +9,7 @@ test('added query returned in getAllQueries', () => {
     let foundQuery = sut.getAllQueries().find( q => q.id === queryId);
 
     expect(foundQuery).toBeDefined();
-    expect(foundQuery).toMatchObject(query);
+    expect(foundQuery.conditions[0]).toMatchObject(query);
 });
 
 test('added query returned in getQueries', () => {
@@ -21,7 +21,7 @@ test('added query returned in getQueries', () => {
     let foundQuery = sut.getQueries(sid).find( q => q.id === queryId);
 
     expect(foundQuery).toBeDefined();
-    expect(foundQuery).toMatchObject(query);
+    expect(foundQuery.conditions[0]).toMatchObject(query);
 });
 
 test('added query is idempotent', () => {
@@ -78,7 +78,7 @@ test('removed query not returned in getQueries', () => {
     let foundQuery = (sut.getQueries(sid) || []).find( q => q.id === queryId);
 
     expect(foundQuery).toBeUndefined();
-    expect(removedQuery).toMatchObject(query);
+    expect(removedQuery.conditions[0]).toMatchObject(query);
 });
 
 test('removed query does not include sid in list', () => {
@@ -88,13 +88,13 @@ test('removed query does not include sid in list', () => {
     let sid2 = '345';
 
     let queryId = sut.addQuery(query, sid);
-    let queryId2 = sut.addQuery(query, sid2);   // eslint-disable-line no-unusedvars
+    let queryId2 = sut.addQuery(query, sid2);   // eslint-disable-line no-unused-vars
     let removedQuery = sut.removeQuery(query, sid);
     let resultSids = sut.getSids(queryId);
     let found = resultSids.find(x => x == sid );
 
     expect(found).toBeUndefined();
-    expect(removedQuery).toMatchObject(query);
+    expect(removedQuery.conditions[0]).toMatchObject(query);
 });
 
 test('addConnection creates can be retrieved', () => {

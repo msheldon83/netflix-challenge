@@ -11,7 +11,7 @@ function removeId(o){
 }
 
 function addQuerySignature(q, signatures){
-    let key = querySignature(q);
+    let key = querySignature(q.conditions);
     if(signatures[key] && signatures[key] != q.id)
         throw "Query signature already exists";
     
@@ -48,18 +48,18 @@ function removeQueryFromSessionQueries(q, sid, sessionQueries){
 }
 
 function removeQuerySignature(q, signatures){
-    let key = querySignature(q);
+    let key = querySignature(q.conditions);
     delete signatures[key];
 }
 
-function findQueryId(query, signatures){
-    let key = querySignature(query);
+function findQueryId(conditions, signatures){
+    let c = Array.isArray(conditions) ? conditions : [conditions];
+    let key = querySignature(c);
     return signatures[key];
 }
 
-function querySignature(query){
-    let queryWithoutId = removeId(query);
-    return JSON.stringify(queryWithoutId);
+function querySignature(conditions){
+    return JSON.stringify(conditions);
 }
 
 // Note: I chose to make the data representation to be more complex 
@@ -89,8 +89,9 @@ class Repository{
     }
     
     addQuery(query, sid){  //returns queryId
-        let id = findQueryId(query, this.querySignatures) || uuidv4();
-        let q = Object.assign({ "id" : id }, query);
+        let conditions = Array.isArray(query) ? query : [ query ];
+        let id = findQueryId(conditions, this.querySignatures) || uuidv4();
+        let q = { "id" : id, conditions: conditions };
 
         addQuerySignature(q, this.querySignatures);
         addQueryToQueries(q, this.queries);
@@ -114,7 +115,8 @@ class Repository{
     }
 
     removeQuery(query, sid){ //returns query object
-        let id = findQueryId(query, this.querySignatures);
+        let conditions = Array.isArray(query) ? query : [ query ];
+        let id = findQueryId(conditions, this.querySignatures);
         if(!id) return;
 
         return this.removeQueryById(id, sid);

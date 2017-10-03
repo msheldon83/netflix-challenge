@@ -166,10 +166,14 @@ test('resolveTargets finds one query and one connection', () => {
     let testQueries = [
         {
             id: 'Q1',
-            field: 'tweet',
-            operator: 'equals',
-            value: 'M1'
-        }
+            conditions: [
+                {
+                    field: 'tweet',
+                    operator: 'equals',
+                    value: 'M1'
+                }
+            ]
+        }   
     ]
     let message = { tweet: 'M1'};
     let mockRepository = td.constructor(Repository);
@@ -188,16 +192,24 @@ test('resolveTargets finds multiple queries and one connection', () => {
     let testQueries = [
         {
             id: 'Q1',
-            field: 'tweet',
-            operator: 'equals',
-            value: 'M1'
-        },
+            conditions: [
+                {
+                    field: 'tweet',
+                    operator: 'equals',
+                    value: 'M1'
+                }
+            ]
+        } ,
         {
             id: 'Q2',
-            field: 'tweet',
-            operator: 'contains',
-            value: 'M'
-        }
+            conditions: [
+                {
+                    field: 'tweet',
+                    operator: 'contains',
+                    value: 'M'
+                }
+            ]
+        }   
     ]
     let message = { tweet: 'M1'};
     let mockRepository = td.constructor(Repository);
@@ -217,10 +229,14 @@ test('resolveTargets finds one query and multiple connections', () => {
     let testQueries = [
         {
             id: 'Q1',
-            field: 'tweet',
-            operator: 'equals',
-            value: 'M1'
-        }
+            conditions: [
+                {
+                    field: 'tweet',
+                    operator: 'equals',
+                    value: 'M1'
+                }
+            ]
+        }   
     ]
     let message = { tweet: 'M1'};
     let mockRepository = td.constructor(Repository);
@@ -242,16 +258,24 @@ test('resolveTargets finds multiple queries and multiple connection', () => {
     let testQueries = [
         {
             id: 'Q1',
-            field: 'tweet',
-            operator: 'equals',
-            value: 'M1'
-        },
+            conditions: [
+                {
+                    field: 'tweet',
+                    operator: 'equals',
+                    value: 'M1'
+                }
+            ]
+        } ,
         {
             id: 'Q2',
-            field: 'tweet',
-            operator: 'contains',
-            value: 'M'
-        }
+            conditions: [
+                {
+                    field: 'tweet',
+                    operator: 'contains',
+                    value: 'M'
+                }
+            ]
+        }   
     ]
     let message = { tweet: 'M1'};
     let mockRepository = td.constructor(Repository);

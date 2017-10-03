@@ -1,5 +1,5 @@
-export function match(message, query){  // returns bool
-    var q = Array.isArray(query) ? query : [ query ];
+export function match(message, conditions){  // returns bool
+    var q = Array.isArray(conditions) ? conditions : [ conditions ];
     return q.reduce((result, c) => matchCondition(message, c), true);
 }
 
@@ -23,7 +23,7 @@ function matchCondition(message, condition){
 
 function matchedQueries(message, allQueries){ // returns [ queryIds ]
     return Object.values(allQueries)
-        .filter((q) => match(message, q))
+        .filter((q) => match(message, q.conditions))
         .map((q) => q.id);
 }
 
