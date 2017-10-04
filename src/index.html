@@ -1,12 +1,21 @@
-<h1>Hello World!</h1>
-<script>
-    var src = new EventSource('https://tweet-service.herokuapp.com/stream');
-    src.onMessage = (message) => console.log(message);
-    
-    src.addEventListener('message', function(e) {
-            console.log(e.data);
-        }, false);
-
-    setTimeout(1000, src.close;
-    console.log("running");
-</script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue Example</title>
+  </head>
+  <body>
+      <div id="app">
+    <h3>{{ message }}</h3>
+</div>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+        })
+    </script>
+  </body>
+</html>

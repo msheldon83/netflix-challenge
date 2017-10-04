@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "npm-run-all --parallel open:src lint:watch test:watch",
-    "open:src": "babel-node buildScripts/srcServer.js",
+    "open:src": "babel-node src/server/index.js",
     "lint": "esw webpack.config.* src buildScripts",
     "lint:watch": "npm run lint -- --watch",
     "test": "jest",
@@ -19,9 +19,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "eventsource": "^1.0.5",
-    "testdouble": "^3.2.6",
-    "uuid": "^3.1.0",
-    "whatwg-fetch": "1.0.0"
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "babel-cli": "6.16.0",
@@ -29,22 +27,13 @@
     "babel-loader": "6.2.5",
     "babel-preset-env": "^1.6.0",
     "babel-register": "6.16.3",
-    "cross-env": "3.1.3",
-    "css-loader": "0.25.0",
     "eslint": "3.8.1",
     "eslint-plugin-import": "2.0.1",
     "eslint-watch": "2.1.14",
     "express": "4.14.0",
-    "extract-text-webpack-plugin": "1.0.1",
-    "html-webpack-plugin": "2.22.0",
     "jest": "^21.2.1",
     "npm-run-all": "3.1.1",
-    "nsp": "2.6.2",
     "open": "0.0.5",
-    "style-loader": "0.13.1",
-    "webpack": "1.13.2",
-    "webpack-dev-middleware": "1.8.4",
-    "webpack-hot-middleware": "2.13.0",
-    "webpack-md5-hash": "0.0.5"
+    "testdouble": "^3.2.6"
   }
 }

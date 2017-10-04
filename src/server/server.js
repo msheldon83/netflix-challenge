@@ -1,18 +1,17 @@
-import App from '../src/server/app.js'
-import Repository from '../src/server/repository.js'
-import { Resolver } from '../src/server/resolver.js'
-import FireHose from '../src/server/fireHose.js'
+import App from './app.js'
+import Repository from './repository.js'
+import { Resolver } from './resolver.js'
+import FireHose from './fireHose.js'
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const path = require ("path");
-const open = require("open");
-const sse = require('../src/middleware/sse');
+import express from "express"
+import bodyParser from "body-parser"
+import path from "path"
+import sse from './middleware/sse'
 
 
 // Express setup
-const port = 3000;
 const app = express();
+app.use(express.static(path.join(__dirname, '../client')));
 app.use(sse);
 app.use(bodyParser.json());
 
@@ -31,7 +30,7 @@ const appLogic = new App(
 
 // Index.html
 app.get('/', function(req, res){
-    res.sendFile(path.join(__dirname, '../src/index.html'));
+    res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 // Establish a stream connection 
@@ -62,14 +61,4 @@ app.get('/teststream', function(req, res){
     setInterval( function(){ res.sseSend({ "tweet" : "Ho" })}, 500 );
 });
 
-
-
-// Start Listening
-app.listen(port, function(err){
-    if(err){
-        console.log(err);
-    } else {
-        open('http://localhost:' + port);
-    }
-
-});
+export default app;
