@@ -12,14 +12,17 @@
     "lint": "esw webpack.config.* src buildScripts",
     "lint:watch": "npm run lint -- --watch",
     "test": "jest",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "devui": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "buildui": "cross-env NODE_ENV=development webpack --progress --hide-modules"
   },
   "author": "Mike Sheldon",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
     "eventsource": "^1.0.5",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "vue": "^2.4.4"
   },
   "devDependencies": {
     "babel-cli": "6.16.0",
@@ -34,6 +37,13 @@
     "jest": "^21.2.1",
     "npm-run-all": "3.1.1",
     "open": "0.0.5",
-    "testdouble": "^3.2.6"
+    "testdouble": "^3.2.6",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.4",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
   }
 }

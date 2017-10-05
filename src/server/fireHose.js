@@ -16,9 +16,10 @@ class FireHose {
         var self = this;
 
         source.onmessage = function(e) {
-            let targets = self.resolver.resolveTargets(JSON.parse(e.data));
+            let message = JSON.parse(e.data);
+            let targets = self.resolver.resolveTargets(message);
             targets.map((t) => {
-                t.connection.sseSend({ message: e.data, queryIds: t.queryIds});
+                t.connection.sseSend({ message: message, queryIds: t.queryIds});
             });
         };
         

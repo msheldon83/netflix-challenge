@@ -1,6 +1,6 @@
 import App from './app.js'
 import Repository from './repository.js'
-import { Resolver } from './resolver.js'
+import { Resolver, match } from './resolver.js'
 import FireHose from './fireHose.js'
 
 import express from "express"
@@ -11,7 +11,7 @@ import sse from './middleware/sse'
 
 // Express setup
 const app = express();
-app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static('dist'));
 app.use(sse);
 app.use(bodyParser.json());
 
@@ -34,9 +34,21 @@ app.get('/', function(req, res){
 });
 
 // Establish a stream connection 
+app.post('/stream', function(req, res){
+    res.sseSetup();
+    let source = new EventSource(netflixUrl);
+
+    source.onmessage = function(e) {
+        var message = JSON.parse(e.data);
+        if(match(message, req.body)){
+            res.sseSend({ message: message, queryIds: t.queryIds});
+        }
+    };
+});
+
+// Establish a stream connection 
 app.get('/connections/:sid', function(req, res){
     res.sseSetup();
-    res.sseSend("hello");
     appLogic.addConnection(res, req.params.sid);
 });
 
