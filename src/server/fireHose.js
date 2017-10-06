@@ -27,6 +27,7 @@ class FireHose {
             if (e.readyState == EventSource.CLOSED) {
                 // Connection was closed.
                 // restart it
+                // TODO add backoff time
                 delete this.eventSrc
                 self.start();
             }
