@@ -34,14 +34,14 @@ app.get('/', function(req, res){
 });
 
 // Establish a stream connection 
-app.post('/stream', function(req, res){
+app.get('/stream/:query', function(req, res){
     res.sseSetup();
     let source = new EventSource(netflixUrl);
 
     source.onmessage = function(e) {
         var message = JSON.parse(e.data);
-        if(match(message, req.body)){
-            res.sseSend({ message: message, queryIds: t.queryIds});
+        if(match(message, req.params.query)){
+            res.sseSend(message);
         }
     };
 });

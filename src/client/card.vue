@@ -7,7 +7,8 @@
     <div class="query card-body" v-show="!card.started">
         <query-form :query="card.query"></query-form>
         <div class="buttons">
-            <button type="button" class="btn btn-primary" v-on:click="card.started=true">Start</button>
+            <button type="button" class="btn btn-secondary" v-on:click="$emit('delete', index)">Stop</button>
+            <button type="button" class="btn btn-primary" v-on:click="$emit('start')">Start</button>
         </div>
     </div>
     <div class="tweets card-body" v-show="card.started">
@@ -15,17 +16,18 @@
             <tweet v-for="(tweet, index) in card.tweets" :tweet="tweet" :key="index" ></tweet>
         </ul>
         <div class="buttons">
-            <button type="button" class="btn btn-danger" v-on:click="card.started=false">Stop</button>
+            <button type="button" class="btn btn-danger" v-on:click="$emit('stop')">Stop</button>
         </div>
     </div>
 </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import queryForm from './queryForm.vue'
 import tweet from './tweet.vue'
 export default {
-    props: ['card'],
+    props: ['card', 'index'],
     components: { queryForm, tweet }
 }
 </script>

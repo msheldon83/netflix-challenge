@@ -8,7 +8,11 @@
   <body>
     <h1>Netflix Tweet Query UI</h1>
     <div id="app" class="container">
-        <App :cards="cards"></App>
+        <App :cards="cards" 
+          v-on:card-started="cardStarted" 
+          v-on:card-stopped="cardStopped"
+          v-on:card-added="cardAdded"
+          v-on:card-deleted="cardDeleted"></App>
     </div>
     <script src="/dist/build.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>

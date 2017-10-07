@@ -19,7 +19,7 @@
             <input type="text"  v-model="condition.value">
         </td>
         <td>
-            <button type="button" class="btn btn-link" v-on:click="$emit('remove')">+ Add</button>
+            <button type="button" class="btn btn-link" v-on:click="$emit('remove', index)">Delete</button>
         </td>
     </tr>
 

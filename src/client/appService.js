@@ -1,6 +1,23 @@
 import uuidv4 from 'uuid/v4';
 import EventSource from 'eventsource';
 const MAX_VISIBLE_TWEETS = 100;
+
+const emptyCard = {
+    "name": "New Card",
+    "query" : {
+        "id": "",
+        "conditions" : [
+            {
+                "field": "",
+                "operator": "",
+                "value": ""
+            }
+        ]
+    },
+    "tweets": [],
+    "started": false
+}
+
 export default class AppService{
     
     constructor($http){
@@ -8,28 +25,17 @@ export default class AppService{
         this.$http.headers.common['content-type'] = 'application/json';
         this.connectionId = uuidv4();
         this.data = {
-            "cards" : [
-                {
-                    "name": "testCard",
-                    "query" : {
-                        "id": "abcd123",
-                        "conditions" : [
-                            {
-                                "field": "tweet",
-                                "operator": "contains",
-                                "value": "X"
-                            }
-                        ]
-                    },
-                    "tweets": [ 
-                        {"tweet":"daredevil awesome. #greatshow","user":"user-10","retweet_count":75,"created_at":1470424244752,"verified":false,"lang":"en"},
-                        {"tweet":"narcos rocks. #greatshow","user":"user-13","retweet_count":449,"created_at":1470424244752,"verified":false,"lang":"es"}
-                    ],
-                    "started": true
-                }
-            ],
+            "cards" : [],
             "languages" : []
         }
+    }
+
+    addCard(){
+        this.data.cards.push(Object.assign({}, emptyCard))
+    }
+
+    deleteCard(index){
+        this.data.cards.push(Object.assign({}, emptyCard))
     }
 
     addTweet(message){
@@ -48,7 +54,7 @@ export default class AppService{
 
     startQuery(card){
         let query = card.query;
-        this.$http.post(`/connection/{this.connectionId}/queries`, query).then(
+        this.$http.post(`/connection/${this.connectionId}/queries`, query).then(
             (response) => { 
                 query.Id = response.data; 
                 card.started = true;
@@ -58,8 +64,9 @@ export default class AppService{
         this.startConnection();
     }
 
-    stopQuery(query){
-        this.$http.delete(`/connection/{this.connectionId}/queries/query.id`).then(
+    stopQuery(card){
+        let query = card.query;
+        this.$http.delete(`/connection/${this.connectionId}/queries/${query.id}`).then(
             (response) => { 
                 card.started = false;
             },
@@ -75,7 +82,7 @@ export default class AppService{
     startConnection(){
         if(this.eventSrc) return;
         
-        let source = new EventSource(`/connection/{this.connectionId}`);
+        let source = new EventSource(`/connection/${this.connectionId}`);
         var self = this;
 
         source.onmessage = function(e) {
@@ -110,7 +117,7 @@ export default class AppService{
 
     startSimpleConnection(query, card){
         let queryStringified = JSON.stringify(query);
-        let source = new EventSource(`/stream?query={queryStringified`);
+        let source = new EventSource(`/stream?query=${queryStringified}`);
         var self = this;
 
         source.onmessage = function(e) {

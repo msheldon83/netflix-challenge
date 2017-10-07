@@ -10,7 +10,18 @@ new Vue({
     data: svc.data,
     components: { App },
     methods: {
-        
+        cardStarted: function(card){
+            svc.startQuery(card);
+        },
+        cardStopped: function(card){
+            svc.stopQuery(card);
+        },
+        cardAdded: function(){
+            svc.addCard();
+        },
+        cardDeleted: function(card){
+            console.log("deleted");
+            console.log(card);
+        }
     }
-
 })
