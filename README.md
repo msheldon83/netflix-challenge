@@ -3,9 +3,9 @@ Developed by Mike Sheldon for submission 10/9/2017
 
 ## Live Demo
 
-// TODO put link here
+https://netflix-challenge-mhztpeavkc.now.sh/
 
-Hosted on https://zeit.co/
+Hosted on https://zeit.co/ now platform.
 
 NOTE: This could take a few seconds if waking up from an extended time of no use.
 
