@@ -15,6 +15,7 @@ Build and deploy with docker:
 
 ```
 git clone https://github.com/msheldon83/netflix-challenge.git
+cd netflix-challenge/
 docker build -t msheldon-challenge .
 docker run -p 8888:3000 msheldon-challenge
 ```
