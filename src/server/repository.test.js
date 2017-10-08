@@ -39,6 +39,22 @@ test('added query is idempotent', () => {
     expect(foundSids.length).toEqual(1);
 });
 
+test('added query different condition order is still idempotent', () => {
+    let sut = new Repository();
+    let condition1 = { field: "message", operator: "equals", value: "hello" };
+    let condition2 = { field: "message", operator: "contains", value: "world" };
+    let sid = '123';
+
+    let queryId = sut.addQuery([condition1, condition2], sid);
+    let queryId2 = sut.addQuery([condition2, condition1], sid);
+    let foundQuery = sut.getQueries(sid).filter( q => q.id === queryId);
+    let foundSids = sut.getSids(queryId)
+
+    expect(queryId).toEqual(queryId2);
+    expect(foundQuery.length).toEqual(1);
+    expect(foundSids.length).toEqual(1);
+});
+
 test('added query added to multiple sids returns all sids', () => {
     let sut = new Repository();
     let query = { field: "message", operator: "equals", value: "hello" };

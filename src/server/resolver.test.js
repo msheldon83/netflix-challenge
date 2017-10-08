@@ -162,6 +162,32 @@ test('example compound query match', () => {
     
 })
 
+test('example compound query mismatch', () => {
+    let query = [
+        {
+            field: "tweet", 
+            operator: "contains", 
+            value: "amazing"
+        },
+        {
+            field: "user", 
+            operator: "equals", 
+            value: "user-1"
+        }
+    ]
+    let message = {
+        "tweet": "narcos is amazing. #greatshow",
+        "user": "user-15",
+        "retweet_count": 449,
+        "created_at": 1470424244752,
+        "verified": false,
+        "lang": "es"
+    }
+
+    expect(match(message, query)).toBeFalsy();
+    
+})
+
 test('resolveTargets finds one query and one connection', () => {
     let testQueries = [
         {

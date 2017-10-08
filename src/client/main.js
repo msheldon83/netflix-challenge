@@ -14,14 +14,19 @@ new Vue({
             svc.startQuery(card);
         },
         cardStopped: function(card){
-            svc.stopQuery(card);
+            svc.stopQuery(card, true);
+        },
+        cardPaused: function(card){
+            svc.stopQuery(card,false);
+        },
+        cardResumed: function(card){
+            svc.startQuery(card);
         },
         cardAdded: function(){
             svc.addCard();
         },
-        cardDeleted: function(card){
-            console.log("deleted");
-            console.log(card);
+        cardDeleted: function(index){
+            svc.deleteCard(index)
         }
     }
 })

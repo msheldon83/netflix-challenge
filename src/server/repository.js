@@ -59,7 +59,33 @@ function findQueryId(conditions, signatures){
 }
 
 function querySignature(conditions){
-    return JSON.stringify(conditions);
+    return JSON.stringify(conditions.sort(compareConditions));
+}
+
+function compareConditions(a, b){
+    let result = compareString(a.field, b.field);
+    if(result == 0) result = compareString(a.operator, b.operator);
+    if(result == 0) result = compareString(a.value, b.value);
+    return result;
+}
+
+function compareString(a,b){
+    if (a > b) return -1;
+    if (b > a) return 1;
+    return 0;
+}
+
+function cleanupConditions(queryConditions){
+    let conditions = Array.isArray(queryConditions) ? queryConditions : [ queryConditions ];
+    let conditionsWithRegexResolved = conditions.map((c) => {
+        if(c.operator == "regex"){
+            let reStr = c.value.replace(/(^\/)|(\/$)/g, "")
+            return Object.assign( { re : new RegExp(reStr) }, c);
+        }
+        return c;
+    });
+    return conditionsWithRegexResolved;
+    
 }
 
 // Note: I chose to make the data representation to be more complex 
@@ -89,8 +115,8 @@ class Repository{
     }
     
     addQuery(query, sid){  //returns queryId
-        let conditions = Array.isArray(query) ? query : [ query ];
-        let id = findQueryId(conditions, this.querySignatures) || uuidv4();
+        let conditions = cleanupConditions(query);
+        let id = findQueryId(conditions, this.querySignatures) || uuidv4();        
         let q = { "id" : id, conditions: conditions };
 
         addQuerySignature(q, this.querySignatures);
@@ -104,6 +130,8 @@ class Repository{
     removeQueryById(id, sid) {
 
         let q = this.queries[id];
+
+        if (!q) return null;
 
         removeQueryFromSessions(q, sid, this.sessions);
         var sessionsRemain = removeQueryFromSessionQueries(q, sid, this.sessionQueries);

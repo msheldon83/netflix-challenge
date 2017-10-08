@@ -1,20 +1,20 @@
 export function match(message, conditions){  // returns bool
     var q = Array.isArray(conditions) ? conditions : [ conditions ];
-    return q.reduce((result, c) => matchCondition(message, c), true);
+    return q.every((c) => matchCondition(message, c));
 }
 
 function matchCondition(message, condition){
     let value = message[condition.field];
     if(value == undefined) return false;
 
-    let re = new RegExp(condition.value);
+    let re = condition.operator == "regex" && condition.re ? condition.re : new RegExp(condition.value);
+
     switch(condition.operator){
         case "equals":
             return value == condition.value;
         case "contains":
             return value.includes(condition.value);
         case "regex":
-            // expect the value to be in string format without slashes
             return re.test(value);
         default: 
             return false

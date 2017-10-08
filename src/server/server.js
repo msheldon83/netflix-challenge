@@ -30,7 +30,7 @@ const appLogic = new App(
 
 // Index.html
 app.get('/', function(req, res){
-    res.sendFile(path.join(__dirname, '../index.html'));
+    res.sendFile(path.join(__dirname, '../../index.html'));
 });
 
 // Establish a stream connection 
@@ -59,7 +59,14 @@ app.get('/connections/:sid/queries', function(req, res){
 
 // Post a new query
 app.post('/connections/:sid/queries', function(req, res){
-    res.send(appLogic.addQuery(req.body, req.params.sid));
+    let queryConditions = req.body;
+    if(appLogic.validQueryConditions(req.body)){
+        res.send(appLogic.addQuery(req.body, req.params.sid));
+    }
+    else {
+        res.sendStatus(400);
+    }
+    
 });
 
 // Delete a query
