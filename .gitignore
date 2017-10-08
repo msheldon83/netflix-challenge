@@ -58,5 +58,5 @@ typings/
 .env
 
 # ui build directory
-/dist
+dist/
 
