@@ -28,10 +28,10 @@ test('removing last query turns off firehose', () => {
 
     sut.removeQueryById("Q1", "S1");
     td.verify(fireHose.stop());
-        
+
 });
 
-test ('validQueryConditions handles regex', () => {
+test('validQueryConditions handles regex', () => {
     let conditions = [{
         field: "tweet",
         operator: "contains",
@@ -44,7 +44,7 @@ test ('validQueryConditions handles regex', () => {
     expect(result).toBeTruthy();
 })
 
-test ('validQueryConditions returns false if invalid field', () => {
+test('validQueryConditions returns false if invalid field', () => {
     let conditions = [{
         field: "xtweet",
         operator: "contains",
@@ -57,7 +57,7 @@ test ('validQueryConditions returns false if invalid field', () => {
     expect(result).toBeFalsy();
 })
 
-test ('validQueryConditions returns false if invalid operator', () => {
+test('validQueryConditions returns false if invalid operator', () => {
     let conditions = [{
         field: "tweet",
         operator: "xcontains",
@@ -70,7 +70,7 @@ test ('validQueryConditions returns false if invalid operator', () => {
     expect(result).toBeFalsy();
 })
 
-test ('validQueryConditions returns false if missing field', () => {
+test('validQueryConditions returns false if missing field', () => {
     let conditions = [{
         operator: "contains",
         value: "/a/"
@@ -82,7 +82,7 @@ test ('validQueryConditions returns false if missing field', () => {
     expect(result).toBeFalsy();
 })
 
-test ('validQueryConditions returns false if missing value', () => {
+test('validQueryConditions returns false if missing value', () => {
     let conditions = [{
         field: "tweet",
         operator: "contains"
@@ -94,7 +94,7 @@ test ('validQueryConditions returns false if missing value', () => {
     expect(result).toBeFalsy();
 })
 
-test ('validQueryConditions returns false if missing operator', () => {
+test('validQueryConditions returns false if missing operator', () => {
     let conditions = [{
         field: "tweet",
         value: "/a/"
@@ -106,17 +106,18 @@ test ('validQueryConditions returns false if missing operator', () => {
     expect(result).toBeFalsy();
 })
 
-test ('validQueryConditions returns false if one invalid', () => {
+test('validQueryConditions returns false if one invalid', () => {
     let conditions = [{
-        field: "tweet",
-        operator: "contains",
-        value: "/a/"
-    },
-    {
-        field: "xtweet",
-        operator: "contains",
-        value: "/a/"
-    }];
+            field: "tweet",
+            operator: "contains",
+            value: "/a/"
+        },
+        {
+            field: "xtweet",
+            operator: "contains",
+            value: "/a/"
+        }
+    ];
 
     let sut = new AppLogic()
     let result = sut.validQueryConditions(conditions);

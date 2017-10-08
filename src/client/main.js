@@ -8,24 +8,26 @@ let svc = new AppService(Vue.http);
 new Vue({
     el: '#app',
     data: svc.data,
-    components: { App },
+    components: {
+        App
+    },
     methods: {
-        cardStarted: function(card){
+        cardStarted: function (card) {
             svc.startQuery(card);
         },
-        cardStopped: function(card){
+        cardStopped: function (card) {
             svc.stopQuery(card, true);
         },
-        cardPaused: function(card){
-            svc.stopQuery(card,false);
+        cardPaused: function (card) {
+            svc.stopQuery(card, false);
         },
-        cardResumed: function(card){
+        cardResumed: function (card) {
             svc.startQuery(card);
         },
-        cardAdded: function(){
+        cardAdded: function () {
             svc.addCard();
         },
-        cardDeleted: function(index){
+        cardDeleted: function (index) {
             svc.deleteCard(index)
         }
     }
