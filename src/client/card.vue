@@ -20,6 +20,7 @@
     </div>
     <div class="card-footer" v-show="card.started">
         <div class="buttons">
+            <span>Tweets: {{ card.tweetCount }}</span>
             <button v-show="!card.paused" type="button" class="btn btn-secondary" v-on:click="$emit('pause')">Pause</button>
             <button v-show="card.paused" type="button" class="btn btn-secondary" v-on:click="$emit('resume')">Resume</button>
             <button type="button" class="btn btn-danger" v-on:click="$emit('stop')">Stop</button>

@@ -5,7 +5,6 @@ import {
     match
 } from './resolver.js'
 import FireHose from './fireHose.js'
-
 import express from "express"
 import bodyParser from "body-parser"
 import path from "path"
@@ -21,7 +20,6 @@ app.use(bodyParser.json());
 
 // App logic setup
 const netflixUrl = 'https://tweet-service.herokuapp.com/stream'
-//const testUrl = "http://localhost:3000/test"
 const repository = new Repository();
 const appLogic = new App(
     repository,
@@ -34,19 +32,6 @@ const appLogic = new App(
 // Index.html
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '../../index.html'));
-});
-
-// Establish a stream connection 
-app.get('/stream/:query', function (req, res) {
-    res.sseSetup();
-    let source = new EventSource(netflixUrl);
-
-    source.onmessage = function (e) {
-        var message = JSON.parse(e.data);
-        if (match(message, req.params.query)) {
-            res.sseSend(message);
-        }
-    };
 });
 
 // Establish a stream connection 
@@ -74,16 +59,6 @@ app.post('/connections/:sid/queries', function (req, res) {
 // Delete a query
 app.delete('/connections/:sid/queries/:qid', function (req, res) {
     res.send(appLogic.removeQueryById(req.params.qid, req.params.sid));
-});
-
-// A test SSE stream
-app.get('/teststream', function (req, res) {
-    res.sseSetup();
-    setInterval(function () {
-        res.sseSend({
-            "tweet": "Ho"
-        })
-    }, 500);
 });
 
 export default app;

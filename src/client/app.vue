@@ -1,7 +1,7 @@
 <template>
     <div>
         <header>
-            <h1>Netflix Tweet Query UI</h1>
+            <h1>Netflix Tweet Search</h1>
             <button type="button" class="btn btn-primary" v-on:click ="$emit('card-added')"> Add New Search Card</button>
         </header>
         <div class="cards">

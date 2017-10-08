@@ -1,11 +1,20 @@
 # Netflix Edge Developer Experience Applicant Exercise
 Developed by Mike Sheldon for submission 10/9/2017
 
+## Live Demo
+
+// TODO put link here
+
+Hosted on https://zeit.co/
+
+NOTE: This could take a few seconds if waking up from an extended time of no use.
+
 ## Deployment 
 
 Build and deploy with docker:
 
 ```
+git clone https://github.com/msheldon83/netflix-challenge.git
 docker build -t msheldon-challenge .
 docker run -p 8888:3000 msheldon-challenge
 ```
@@ -37,12 +46,27 @@ The service was developed in Node with Express. It supports the concept of a "se
 #### GET /connection/:sid
 Opens a SSE event stream.
 
+Response: eventsource
+
 #### GET /connection/:sid/queries
 Returns the list of queries that are being managed for this session.
+
+Response: application/json
+```json
+[{
+  "id": "string",
+  "conditions": [{
+    "field": "tweet|language|user",
+    "operator": "equals|contains|regex",
+    "value": "string"
+  }]
+}]
+```
 
 #### POST /connection/:sid/queries
 Add a new query (array of conditions) for this connection
 
+Request Body: application/json
 ```json
 [{
     "field": "tweet|language|user",
@@ -51,9 +75,22 @@ Add a new query (array of conditions) for this connection
 }]
 ```
 
+Response: text
+
 #### DELETE /connection/:sid/queries/:qid
 Remove a query by id from this connection
 
+Response: application/json
+```json
+{
+  "id": "string",
+  "conditions": [{
+    "field": "tweet|language|user",
+    "operator": "equals|contains|regex",
+    "value": "string"
+  }]
+}
+```
 
 ### User Interface
 The UI was developed using Vue.js and allows for multiple queries to be submitted from the same browser session.  
@@ -72,5 +109,8 @@ Try to add more than 5 query cards on the screen :-)
   - While it would be fairly easy to scale out the service layer should more traffic need to be handled, sessions would need to be pinned to a single server to get the full benefit of having a single connection.
   - Reconnecting from the client to the server or from the server to the supplied firehose service should utilize some kind of backoff timer following a circuit breaker pattern.
   - I did not have the time to use the data at the /languages endpoint to either provide a dropdown or validate values being tested against language.  
+  - Possible interesting features that I didn't have time to implement
+    - Username lookup API for autocompletion of user equals conditions
+    - Popular searches API based on queries that have been submitted by more than one client
 
 

@@ -1,5 +1,8 @@
 import uuidv4 from 'uuid/v4';
 
+/***********************
+ * Private Functions
+ ***********************/
 function addQueryToQueries(q, queries) {
     queries[q.id] = q;
 }
@@ -90,34 +93,70 @@ function cleanupConditions(queryConditions) {
 
 }
 
-// Note: I chose to make the data representation to be more complex 
-//       to optimize for reads rather than writes
+/**
+ * Manage the data to be able to determine which queries match a tweet and which sessions need to be notified
+ */
 class Repository {
     constructor() {
+        // Note: I chose to make the data representation to be more complex 
+        //        to optimize for reads rather than writes
+
+        // Map key = queryId, value = query object 
         this.queries = {};
+
+        // Map key = querySignature (string), value = queryId
         this.querySignatures = {};
+
+        // Map key = sessionId, value = array of queryIds
         this.sessions = {}
+
+        // Map key = queryId, value = array of sessionIds
         this.sessionQueries = {}
+
+        // Map key = sessionId, value = SSE connection
         this.connections = {}
     }
 
-    addConnection(connection, sid) { // returns void
+    /**
+     * Add a reference to this connection for the session
+     * returns void
+     * @param {object} connection SSE response object
+     * @param {string} sid
+     * @returns {void} 
+     */
+    addConnection(connection, sid) { 
         this.connections[sid] = connection;
         return this.connections[sid];
     }
 
-    removeConnection(sid) { // returns SSE connection
+    /**
+     * Remove the reference for the session's connection
+     * @param {string} sid Session Id
+     * @returns {object} SSE response object
+     */
+    removeConnection(sid) { 
         let conn = this.connections[sid];
         delete this.connections[sid];
         return conn;
     }
 
+    /**
+     * Get the reference for the session's connection
+     * @param {string} sid Session Id
+     * @returns {object} SSE response object
+     */
     getConnection(sid) { // returns SSE connection
         return this.connections[sid];
     }
 
-    addQuery(query, sid) { //returns queryId
-        let conditions = cleanupConditions(query);
+    /**
+     * Create relationship between a query and a session
+     * @param {Array} queryConditions Array of query conditions  
+     * @param {*} sid sessionId
+     * @returns {string} unique queryId (new or matched by signature)
+     */
+    addQuery(queryConditions, sid) { 
+        let conditions = cleanupConditions(queryConditions);
         let id = findQueryId(conditions, this.querySignatures) || uuidv4();
         let q = {
             "id": id,
@@ -132,6 +171,12 @@ class Repository {
         return id;
     }
 
+    /**
+     * Remove a relationship between a query and a connection based on the queryId
+     * @param {string} id queryId
+     * @param {string} sid sessionId
+     * @returns {object} query that was removed
+     */
     removeQueryById(id, sid) {
 
         let q = this.queries[id];
@@ -147,7 +192,13 @@ class Repository {
         return q;
     }
 
-    removeQuery(query, sid) { //returns query object
+    /**
+     * Remove a relationship between a query and a connection based on the query signature
+     * @param {Array} queryConditions Array of query conditions
+     * @param {string} sid sessionId
+     * @returns {object} query that was removed
+     */
+    removeQuery(queryConditions, sid) { //returns query object
         let conditions = Array.isArray(query) ? query : [query];
         let id = findQueryId(conditions, this.querySignatures);
         if (!id) return;
@@ -155,10 +206,19 @@ class Repository {
         return this.removeQueryById(id, sid);
     }
 
+    /**
+     * Get all the queries for all sessions
+     * @returns {Array} Array of all queries for all sessions
+     */
     getAllQueries() { // returns array of query objects
         return Object.values(this.queries);
     }
 
+    /**
+     * Get all the queries for a particular session
+     * @param {string} sid sessionId
+     * @returns {Array} Array of all queries for a particular session
+     */
     getQueries(sid) { // returns array of query objects
         let set = this.sessions[sid];
 
@@ -170,6 +230,11 @@ class Repository {
         return [];
     }
 
+    /**
+     * Get a list of sessionIds related to a query
+     * @param {string} queryId queryId
+     * @returns {Array} An array of sessionIds that have this query open
+     */
     getSids(queryId) { // returns array of strings
         let set = this.sessionQueries[queryId];
         if (set)
@@ -180,15 +245,5 @@ class Repository {
 
 
 }
-
-// query object structure
-/*
-{
-    id: string,
-    field: string, 
-    operator: ['equals', 'contains', 'regex'],
-    value: string
-}
-*/
 
 export default Repository;

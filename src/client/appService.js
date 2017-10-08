@@ -12,6 +12,7 @@ const emptyCard = {
         }]
     },
     "tweets": [],
+    "tweetCount": 0,
     "started": false,
     "paused": false
 
@@ -50,6 +51,7 @@ export default class AppService {
     }
 
     addTweetToCard(message, card) {
+        card.tweetCount++;
         card.tweets.unshift(message.tweet);
         if (card.tweets.length > MAX_VISIBLE_TWEETS) {
             card.tweets.pop();
@@ -87,6 +89,7 @@ export default class AppService {
             (response) => {
                 if (fullStop) {
                     card.tweets.length = 0;
+                    card.tweetCount = 0;
                 }
 
                 let startedQueries = this.data.cards.some((c) => {

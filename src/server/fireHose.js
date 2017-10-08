@@ -1,5 +1,8 @@
 import EventSource from 'eventsource';
 
+/**
+ * Manage the connection to the Netflix provided event stream
+ */
 class FireHose {
     constructor(resolver, url, newEventSourceFn) {
         this.resolver = resolver;
