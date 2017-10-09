@@ -115,8 +115,10 @@ Try to add more than 5 query cards on the screen :-)
   - While it would be fairly easy to scale out the service layer should more traffic need to be handled, sessions would need to be pinned to a single server to get the full benefit of having a single connection.
   - Reconnecting from the client to the server or from the server to the supplied firehose service should utilize some kind of backoff timer following a circuit breaker pattern.
   - I did not have the time to use the data at the /languages endpoint to either provide a dropdown or validate values being tested against language.  
+  - The UI design could be better optimized for mobile and varying screen factors.  I realize exact height and width dimensions in the CSS is not standard or flexible, but I chose to take some shortcuts to avoid taking to much time fiddling with UI layout
   - Possible interesting features that I didn't have time to implement
     - Username lookup API for autocompletion of user equals conditions
     - Popular searches API based on queries that have been submitted by more than one client
+  
 
 
