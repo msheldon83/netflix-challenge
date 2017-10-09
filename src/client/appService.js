@@ -73,7 +73,7 @@ export default class AppService {
         let query = card.query;
         let conditions = query.conditions.filter((c) => !isEmptyCondition(c));
 
-        let errors = validQueryConditions*(conditions);
+        let errors = validQueryConditions(conditions);
         if(errors.length > 0){
             alert (errors.join('; '));
             return;
