@@ -4,7 +4,7 @@ import EventSource from 'eventsource';
  * Manage the connection to the Netflix provided event stream
  */
 class FireHose {
-    constructor(resolver, url, newEventSourceFn) {
+    constructor(resolver, url) {
         this.resolver = resolver;
         this.url = url;
     }
@@ -31,7 +31,7 @@ class FireHose {
                 // Connection was closed.
                 // restart it
                 // TODO add backoff time
-                delete this.eventSrc
+                delete this.eventSrc;
                 self.start();
             }
         };

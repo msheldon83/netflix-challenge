@@ -1,8 +1,7 @@
 import App from './app.js'
 import Repository from './repository.js'
 import {
-    Resolver,
-    match
+    Resolver
 } from './resolver.js'
 import FireHose from './fireHose.js'
 import express from "express"
@@ -42,14 +41,15 @@ app.get('/connections/:sid', function (req, res) {
 
 // Get the list of queries this session is watching
 app.get('/connections/:sid/queries', function (req, res) {
-    res.send(appLogic.getQueries(req.params.sid));
+    res.json(appLogic.getQueries(req.params.sid));
 });
 
 // Post a new query
 app.post('/connections/:sid/queries', function (req, res) {
     let queryConditions = req.body;
-    if (appLogic.validQueryConditions(req.body)) {
-        res.send(appLogic.addQuery(req.body, req.params.sid));
+    let errors = appLogic.validQueryConditions(queryConditions)
+    if (errors.length == 0) {
+        res.send(appLogic.addQuery(queryConditions, req.params.sid));
     } else {
         res.sendStatus(400);
     }
@@ -58,7 +58,7 @@ app.post('/connections/:sid/queries', function (req, res) {
 
 // Delete a query
 app.delete('/connections/:sid/queries/:qid', function (req, res) {
-    res.send(appLogic.removeQueryById(req.params.qid, req.params.sid));
+    res.json(appLogic.removeQueryById(req.params.qid, req.params.sid));
 });
 
 export default app;

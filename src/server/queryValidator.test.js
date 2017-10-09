@@ -1,14 +1,25 @@
+import validQueryConditions from './queryValidator.js'
 test('validQueryConditions handles regex', () => {
     let conditions = [{
         field: "tweet",
-        operator: "contains",
+        operator: "regex",
         value: "/a/"
     }];
 
-    let sut = new AppLogic()
-    let result = sut.validQueryConditions(conditions);
+    let result = validQueryConditions(conditions);
 
-    expect(result).toBeTruthy();
+    expect(result.length).toEqual(0);
+})
+
+test('validQueryConditions errors on invalid regex', () => {
+    let conditions = [{
+        field: "tweet",
+        operator: "regex",
+        value: "/*/"
+    }];
+
+    let result = validQueryConditions(conditions);
+    expect(result.length).toEqual(1);
 })
 
 test('validQueryConditions returns false if invalid field', () => {
@@ -18,10 +29,9 @@ test('validQueryConditions returns false if invalid field', () => {
         value: "/a/"
     }];
 
-    let sut = new AppLogic()
-    let result = sut.validQueryConditions(conditions);
+    let result = validQueryConditions(conditions);
 
-    expect(result).toBeFalsy();
+    expect(result.length).toEqual(1);
 })
 
 test('validQueryConditions returns false if invalid operator', () => {
@@ -31,10 +41,9 @@ test('validQueryConditions returns false if invalid operator', () => {
         value: "/a/"
     }];
 
-    let sut = new AppLogic()
-    let result = sut.validQueryConditions(conditions);
+    let result = validQueryConditions(conditions);
 
-    expect(result).toBeFalsy();
+    expect(result.length).toEqual(1);
 })
 
 test('validQueryConditions returns false if missing field', () => {
@@ -43,10 +52,9 @@ test('validQueryConditions returns false if missing field', () => {
         value: "/a/"
     }];
 
-    let sut = new AppLogic()
-    let result = sut.validQueryConditions(conditions);
+    let result = validQueryConditions(conditions);
 
-    expect(result).toBeFalsy();
+    expect(result.length).toEqual(1);
 })
 
 test('validQueryConditions returns false if missing value', () => {
@@ -55,10 +63,9 @@ test('validQueryConditions returns false if missing value', () => {
         operator: "contains"
     }];
 
-    let sut = new AppLogic()
-    let result = sut.validQueryConditions(conditions);
+    let result = validQueryConditions(conditions);
 
-    expect(result).toBeFalsy();
+    expect(result.length).toEqual(1);
 })
 
 test('validQueryConditions returns false if missing operator', () => {
@@ -67,10 +74,9 @@ test('validQueryConditions returns false if missing operator', () => {
         value: "/a/"
     }];
 
-    let sut = new AppLogic()
-    let result = sut.validQueryConditions(conditions);
+    let result = validQueryConditions(conditions);
 
-    expect(result).toBeFalsy();
+    expect(result.length).toEqual(1);
 })
 
 test('validQueryConditions returns false if one invalid', () => {
@@ -86,8 +92,6 @@ test('validQueryConditions returns false if one invalid', () => {
         }
     ];
 
-    let sut = new AppLogic()
-    let result = sut.validQueryConditions(conditions);
-
-    expect(result).toBeFalsy();
+    let result = validQueryConditions(conditions);
+    expect(result.length).toEqual(1);
 })

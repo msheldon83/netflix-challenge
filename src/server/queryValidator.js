@@ -1,4 +1,4 @@
-const validFields = ["tweet", "language", "user"];
+const validFields = ["tweet", "lang", "user"];
 const validOperators = ["equals", "contains", "regex"];
 
 /**
@@ -8,22 +8,31 @@ const validOperators = ["equals", "contains", "regex"];
  */
 function validCondition(c) {
 
-    if (c.field === undefined || !validFields.includes(c.field)) return false;
-    if (c.operator === undefined || !validOperators.includes(c.operator)) return false;
-    if (c.value === undefined) return false;
+    if (c.field === undefined || !validFields.includes(c.field)) return 'field must be defined as ' + validFields.join();
+    if (c.operator === undefined || !validOperators.includes(c.operator)) return 'operator must be defined as ' + validOperators.join();
+    if (c.value === undefined) return 'value not defined';
+    if (c.operator == "regex"){
+        let reStr = c.value.replace(/(^\/)|(\/$)/g, "")
+        try{
+            new RegExp(reStr)
+        } catch (e) {
+            return 'Invalid Regular Expression ' + reStr;
+        }
+    }
 
-    return true;
+    return;
 }
 
 /**
  * Confirm that all conditions in the array are valid
  * @param {Array} queryConditions An array of query conditions to validate
- * @returns {boolean} True if all conditions are valid
+ * @returns {Array} Array of errors; empty array = valid
  */
 function validQueryConditions(conditions) {
-    return conditions.every((c) => {
-        return validCondition(c)
-    })
+    return conditions.reduce((arr, c) => {
+        let error = validCondition(c);
+        return error === undefined ? arr : [...arr, error];
+    }, [])
 }
 
 export default validQueryConditions;

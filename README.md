@@ -22,6 +22,11 @@ docker run -p 8888:3000 msheldon-challenge
 
 Browse to http://localhost:8888
 
+## Suggested Queries
+The stream of "tweets" has a limited range of words so not everything you'd see on twitter is gonna show up here.  Here are a few suggested queries:
+
+ - tweet contains amazing
+ - language equals es
 
 ## Problem Description
 https://tweet-service.herokuapp.com/

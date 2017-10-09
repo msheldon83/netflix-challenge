@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4';
+import validQueryConditions from '../server/queryValidator.js';
 
 const MAX_VISIBLE_TWEETS = 50;
 const emptyCard = {
@@ -16,6 +17,16 @@ const emptyCard = {
     "started": false,
     "paused": false
 
+}
+
+function isEmptyCondition(condition){
+    return isEmptyString(condition.field)
+        && isEmptyString(condition.operator)
+        && isEmptyString(condition.value);
+}
+
+function isEmptyString(str){
+    return str === undefined || str == "";
 }
 
 export default class AppService {
@@ -60,10 +71,17 @@ export default class AppService {
 
     startQuery(card) {
         let query = card.query;
+        let conditions = query.conditions.filter((c) => !isEmptyCondition(c));
+
+        let errors = validQueryConditions*(conditions);
+        if(errors.length > 0){
+            alert (errors.join('; '));
+            return;
+        }
 
         card.started = true;
         card.paused = false;
-        this.$http.post(`/connections/${this.connectionId}/queries`, query.conditions).then(
+        this.$http.post(`/connections/${this.connectionId}/queries`, conditions).then(
             (response) => {
                 query.id = response.data;
             },
@@ -115,7 +133,7 @@ export default class AppService {
     startConnection() {
         if (this.eventSrc) return;
 
-        console.log("event source starting")
+        console.log("event source starting") // 
         let source = new EventSource(`/connections/${this.connectionId}`);
         var self = this;
 
@@ -152,16 +170,5 @@ export default class AppService {
                 throw 'failed to retrieve languages'
             }
         )
-    }
-
-    startSimpleConnection(query, card) {
-        let queryStringified = JSON.stringify(query);
-        let source = new EventSource(`/stream?query=${queryStringified}`);
-        var self = this;
-
-        source.onmessage = function (e) {
-            let message = JSON.parse(e.data);
-            self.addTweet(message);
-        };
     }
 }

@@ -12,7 +12,7 @@ class App {
     /**
      * Validate queryConditions.  Handles an array or a single condition
      * @param {Array|object} queryConditions 
-     * @returns {boolean}
+     * @returns {Array} Array of error messages; Empty array == valid
      */
     validQueryConditions(queryConditions) {
         let conditions = Array.isArray(queryConditions) ? queryConditions : [queryConditions];

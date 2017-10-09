@@ -7,12 +7,6 @@ function addQueryToQueries(q, queries) {
     queries[q.id] = q;
 }
 
-function removeId(o) {
-    let objectWithoutId = Object.assign({}, o);
-    delete objectWithoutId.id;
-    return objectWithoutId;
-}
-
 function addQuerySignature(q, signatures) {
     let key = querySignature(q.conditions);
     if (signatures[key] && signatures[key] != q.id)
@@ -199,7 +193,7 @@ class Repository {
      * @returns {object} query that was removed
      */
     removeQuery(queryConditions, sid) { //returns query object
-        let conditions = Array.isArray(query) ? query : [query];
+        let conditions = Array.isArray(queryConditions) ? queryConditions : [queryConditions];
         let id = findQueryId(conditions, this.querySignatures);
         if (!id) return;
 
