@@ -3,9 +3,9 @@ Developed by Mike Sheldon for submission 10/9/2017
 
 ## Live Demo
 
-https://netflix-challenge-mhztpeavkc.now.sh/
+https://netflix-challenge-flmjfmykgf.now.sh/
 
-Hosted on https://zeit.co/ now platform.
+Hosted on https://zeit.co/now platform.
 
 NOTE: This could take a few seconds if waking up from an extended time of no use.
 
